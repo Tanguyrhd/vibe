@@ -1,5 +1,5 @@
 raw_data/
 .env
 .envrc
-notebooks/
+# notebooks/
 .python-version
