@@ -8,21 +8,21 @@ app = FastAPI()
 def root():
     return {'Hello': 'vibe will be there soony'}
 
+with open("../models/logistic_reg.pkl", "rb") as f:
+    model = pickle.load(f)
+
+with open("../models/vectorizer.pkl", "rb") as f:
+    vectorizer = pickle.load(f)
 
 @app.get('/predict')
 def predict(
-    input1=1,
-    input2=1,
-    input3=1,
-    input4=1,
+    tweet='fill in your tweets'
 ):
+    X_input=vectorizer.transform([tweet])
 
-    with open('../models/best_model.pkl', 'rb') as file:
-        model = pickle.load(file)
+    pred=model.predict(X_input)[0]
 
-    pred = model.predict([[input1,input2,input3,input4]])[0]
-
-    return {'prediction': float(pred)}
+    return {'MBTI personality result': str(pred)}
 
 
 # then run to test LOCALLY
