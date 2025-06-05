@@ -5,6 +5,10 @@ uvicorn
 # Model
 scikit-learn
 numpy
+tf-keras
 
 # .env
 python-dotenv
+
+# Transormers
+transformers
