@@ -10,10 +10,10 @@ RUN pip install -e .
 
 
 #Run cotainer locally
-CMD uvicorn package_folder.vibe_api:app --reload --host 0.0.0.0
+# CMD uvicorn package_folder.vibe_api:app --reload --host 0.0.0.0
 
 #Run container deployed -> GCP
-# CMD uvicorn package_folder.api_file:app --reload --host 0.0.0.0 --port $PORT
+CMD uvicorn package_folder.vibe_api:app --reload --host 0.0.0.0 --port $PORT
 
 
 #Then:
