@@ -5,5 +5,11 @@ Requires-Dist: fastapi
 Requires-Dist: uvicorn
 Requires-Dist: scikit-learn
 Requires-Dist: numpy
+<<<<<<< HEAD
+Requires-Dist: tf-keras
 Requires-Dist: python-dotenv
+Requires-Dist: transformers
+=======
+Requires-Dist: python-dotenv
+>>>>>>> master
 Dynamic: requires-dist
