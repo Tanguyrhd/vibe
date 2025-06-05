@@ -2,6 +2,10 @@ fastapi
 uvicorn
 scikit-learn
 numpy
+<<<<<<< HEAD
 tf-keras
 python-dotenv
 transformers
+=======
+python-dotenv
+>>>>>>> master
