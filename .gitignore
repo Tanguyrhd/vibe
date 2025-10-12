@@ -1,5 +1,21 @@
-raw_data/
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+*.pkl
+*.csv
+.ipynb_checkpoints/
+
+# Data / models
+data/
+models/
+llama-2-7b-chat.Q4_K_M.gguf
+
+# Env
 .env
-.envrc
-# notebooks/
-.python-version
+.vscode/
+.idea/
+
+# OS / Windows
+.DS_Store
+Thumbs.db
