@@ -1,15 +1,88 @@
-## Welcome to our project "VIBE"
+# Vibe+ – MBTI Personality Predictor
 
-## Context
+**Vibe+** est un projet de data science et NLP qui prédit les types de personnalité MBTI à partir de textes et analyse la compatibilité entre profils.
 
-The goal of this project is to create and deploy a LLM model
-This model should be able to predict your personnality based on the MBTI personality test and your Twitter interactions.
+## Structure du projet
 
-## Organisation
+```text
+vibe/
+├── data/                   # Données brutes, nettoyées et externes
+├── models/                 # Modèles entraînés (.pkl, .gguf)
+├── notebooks/              # Notebooks organisés par étapes
+│   ├── 01_data_preparation
+│   ├── 02_feature_engineering
+│   ├── 03_model_training
+│   ├── 04_evaluation
+│   ├── 05_llm_mbti
+│   └── archive             # Anciennes expérimentations
+├── src/                    # Modules Python
+│   ├── api/                # API
+│   ├── data/               # Préparation datasets
+│   ├── features/           # Construction features
+│   ├── llm/                # LLM (OpenAI, LLaMA)
+│   ├── models/             # Entraînement et save/load
+│   └── pipeline/           # Exécution projet complet
+├── tests/                  # Tests unitaires
+├── Dockerfile
+├── requirements.txt
+├── Makefile
+└── README.md
+```
 
-This is the backend of our project :
+## Installation
 
-1. In models, you will find  pickle file our model
-2. In notebooks, you wil find all of our WIP notebooks to develops our model/apps
-3. In package folder, you will find our file to create our API
-4. raw_data is our data without processing that come from Kaggle
+Cloner le dépôt :  
+```bash
+git clone git@github.com:Tanguyrhd/vibe.git
+cd vibe
+```
+
+Créer un environnement Python et activer :
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/macOS
+venv\Scripts\activate      # Windows
+```
+
+Installer les dépendances :
+```bash
+pip install -r requirements.txt
+```
+
+Construire le Docker container (optionnel) :
+```bash
+docker build -t vibe .
+```
+
+## Usage
+Préparer les données :
+```bash
+python -m src.data.make_dataset
+```
+
+Construire les features :
+```bash
+python -m src.features.build_features
+```
+
+Entraîner les modèles :
+```bash
+python -m src.models.train_model
+```
+
+Évaluer les modèles :
+```bash
+python -m src.evaluation.evaluate_model
+```
+
+Exécuter le pipeline complet :
+```bash
+python -m src.pipeline.main
+```
+
+## Notes
+```text
+- Les fichiers CSV et modèles lourds ne sont pas versionnés (.gitignore)
+- Les notebooks dans archive/ sont pour référence seulement
+- Pour ajouter de nouvelles données ou modèles, place-les dans data/raw ou models/
+```
