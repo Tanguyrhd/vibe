@@ -1,8 +1,8 @@
 # src/features/build_features.py
 """
-Module de création des features pour le projet Vibe+.
-Transforme les textes nettoyés en représentations numériques
-prêtes pour l'entraînement des modèles ML.
+Feature engineering module for the Vibe+ project.
+Transforms cleaned texts into numerical representations
+ready for ML model training.
 """
 
 from typing import Tuple
@@ -12,49 +12,49 @@ import pickle
 from pathlib import Path
 
 # ==========================
-# 🔹 FONCTIONS DE FEATURE ENGINEERING
+# 🔹 FEATURE ENGINEERING FUNCTIONS
 # ==========================
 
 def create_tfidf_features(df: pd.DataFrame, text_col: str = "clean_text",
                           max_features: int = 5000) -> Tuple[pd.DataFrame, TfidfVectorizer]:
     """
-    Transforme la colonne texte en vecteurs TF-IDF.
+    Transforms a text column into TF-IDF vectors.
 
     Args:
-        df (pd.DataFrame): Jeu de données
-        text_col (str): Nom de la colonne texte
-        max_features (int): Nombre max de features TF-IDF
+        df (pd.DataFrame): Dataset
+        text_col (str): Name of the text column
+        max_features (int): Maximum number of TF-IDF features
 
     Returns:
-        X (pd.DataFrame): Matrice TF-IDF
-        vectorizer (TfidfVectorizer): Objet vectorizer entraîné
+        X (pd.DataFrame): TF-IDF matrix
+        vectorizer (TfidfVectorizer): Fitted vectorizer object
     """
     vectorizer = TfidfVectorizer(max_features=max_features, stop_words='english')
     X_tfidf = vectorizer.fit_transform(df[text_col])
 
-    print(f"✅ TF-IDF features créées ({X_tfidf.shape[1]} features)")
+    print(f"✅ TF-IDF features created ({X_tfidf.shape[1]} features)")
 
     return pd.DataFrame(X_tfidf.toarray(), index=df.index), vectorizer
 
 
 def encode_labels(df: pd.DataFrame, target_cols: list = ["EI", "SN", "TF", "JP"]) -> pd.DataFrame:
     """
-    Sélectionne les colonnes cibles binaires.
+    Selects the binary target columns.
 
     Args:
-        df (pd.DataFrame): Jeu de données
-        target_cols (list): Liste des colonnes à prédire
+        df (pd.DataFrame): Dataset
+        target_cols (list): List of columns to predict
 
     Returns:
-        y (pd.DataFrame): DataFrame des labels
+        y (pd.DataFrame): DataFrame of labels
     """
     y = df[target_cols].copy()
-    print(f"🏷️ Labels extraits : {y.columns.tolist()}")
+    print(f"🏷️ Labels extracted: {y.columns.tolist()}")
     return y
 
 
 # ==========================
-# 🔹 PIPELINE PRINCIPAL
+# 🔹 MAIN PIPELINE
 # ==========================
 
 def build_features(df: pd.DataFrame,
@@ -62,16 +62,16 @@ def build_features(df: pd.DataFrame,
                    max_features: int = 5000,
                    vectorizer_path: str = "models/vectorizer.pkl") -> Tuple[pd.DataFrame, pd.DataFrame]:
     """
-    Pipeline complet de création des features :
-    1. Création des TF-IDF
-    2. Extraction des labels
-    3. Sauvegarde du vectorizer
+    Full feature creation pipeline:
+    1. Create TF-IDF features
+    2. Extract labels
+    3. Save the vectorizer
 
     Args:
-        df (pd.DataFrame): Données nettoyées
-        text_col (str): Nom de la colonne texte
-        max_features (int): Nombre max de features TF-IDF
-        vectorizer_path (str): Chemin pour sauvegarder le vectorizer
+        df (pd.DataFrame): Cleaned dataset
+        text_col (str): Name of the text column
+        max_features (int): Maximum number of TF-IDF features
+        vectorizer_path (str): Path to save the vectorizer
 
     Returns:
         X (pd.DataFrame): Features
@@ -80,20 +80,39 @@ def build_features(df: pd.DataFrame,
     X, vectorizer = create_tfidf_features(df, text_col, max_features)
     y = encode_labels(df)
 
-    # Sauvegarde du vectorizer
+    # Save the vectorizer
     Path(vectorizer_path).parent.mkdir(parents=True, exist_ok=True)
     with open(vectorizer_path, "wb") as f:
         pickle.dump(vectorizer, f)
-    print(f"💾 Vectorizer sauvegardé → {vectorizer_path}")
+    print(f"💾 Vectorizer saved → {vectorizer_path}")
 
     return X, y
 
 
 # ==========================
-# 🔹 EXECUTION DIRECTE
+# 🔹 DIRECT EXECUTION
 # ==========================
 
 if __name__ == "__main__":
-    # Exemple d'utilisation
-    df = pd.read_csv("data/processed/mbti_clean.csv")
-    X, y = build_features(df)
+    processed_folder = Path("data/processed")
+    files = [f for f in processed_folder.glob("*.csv") if f.is_file()]
+
+    if not files:
+        raise FileNotFoundError(f"No CSV files found in {processed_folder}")
+
+    print("📂 Available processed files:")
+    for i, f in enumerate(files):
+        print(f"{i + 1}: {f.name}")
+
+    # Ask user to choose
+    while True:
+        choice = input(f"Choose the file to use (1-{len(files)}): ")
+        if choice.isdigit() and 1 <= int(choice) <= len(files):
+            processed_file = files[int(choice) - 1]
+            break
+        else:
+            print("❌ Invalid input, try again.")
+
+    vectorizer_path = processed_file.parent / f"{processed_file.stem}_vectorizer.pkl"
+    df = pd.read_csv(processed_file)
+    X, y = build_features(df, vectorizer_path=str(vectorizer_path))
