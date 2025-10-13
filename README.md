@@ -1,28 +1,30 @@
 # Vibe+ – MBTI Personality Predictor
 
-**Vibe+** est un projet de data science et NLP qui prédit les types de personnalité MBTI à partir de textes et analyse la compatibilité entre profils.
+Vibe+ is a data science and NLP project that predicts MBTI personality types from text and analyzes compatibility between profiles.
+However, this backend was ultimately not used, as the final model chosen was the OpenAI API, which was directly implemented in the frontend.
+You can access it here: https://github.com/Tanguyrhd/vibe-frontend
 
-## Structure du projet
+## Project structure
 
 ```text
 vibe/
-├── data/                   # Données brutes, nettoyées et externes
-├── models/                 # Modèles entraînés (.pkl, .gguf)
-├── notebooks/              # Notebooks organisés par étapes
+├── data/                   # Raw, cleaned and external data
+├── models/                 # Trained models (.pkl, .gguf)
+├── notebooks/              # Notebooks organized by stages
 │   ├── 01_data_preparation
 │   ├── 02_feature_engineering
 │   ├── 03_model_training
 │   ├── 04_evaluation
 │   ├── 05_llm_mbti
-│   └── archive             # Anciennes expérimentations
-├── src/                    # Modules Python
+│   └── archive             # Old experiments
+├── src/                    # Python modules
 │   ├── api/                # API
-│   ├── data/               # Préparation datasets
-│   ├── features/           # Construction features
+│   ├── data/               # Dataset preparation
+│   ├── features/           # Feature construction
 │   ├── llm/                # LLM (OpenAI, LLaMA)
-│   ├── models/             # Entraînement et save/load
-│   └── pipeline/           # Exécution projet complet
-├── tests/                  # Tests unitaires
+│   ├── models/             # Training and save/load
+│   └── pipeline/           # Full project execution
+├── tests/                  # Unit tests
 ├── Dockerfile
 ├── requirements.txt
 ├── Makefile
@@ -31,58 +33,54 @@ vibe/
 
 ## Installation
 
-Cloner le dépôt :  
+Clone the repository:
 ```bash
 git clone git@github.com:Tanguyrhd/vibe.git
 cd vibe
 ```
 
-Créer un environnement Python et activer :
+Create and activate a Python environment:
 ```bash
 python -m venv venv
 source venv/bin/activate   # Linux/macOS
 venv\Scripts\activate      # Windows
 ```
 
-Installer les dépendances :
+Install dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-Construire le Docker container (optionnel) :
-```bash
-docker build -t vibe .
-```
+## Utilisation
 
-## Usage
-Préparer les données :
+Prepare the data:
 ```bash
 python -m src.data.make_dataset
 ```
 
-Construire les features :
+Build the features:
 ```bash
 python -m src.features.build_features
 ```
 
-Entraîner les modèles :
+Train the models:
 ```bash
 python -m src.models.train_model
 ```
 
-Évaluer les modèles :
+Evaluate the models:
 ```bash
 python -m src.evaluation.evaluate_model
 ```
 
-Exécuter le pipeline complet :
+Run the full pipeline:
 ```bash
 python -m src.pipeline.main
 ```
 
 ## Notes
 ```text
-- Les fichiers CSV et modèles lourds ne sont pas versionnés (.gitignore)
-- Les notebooks dans archive/ sont pour référence seulement
-- Pour ajouter de nouvelles données ou modèles, place-les dans data/raw ou models/
+- CSV files and large models are not versioned (.gitignore)
+- Notebooks in archive/ are for reference only
+- To add new data or models, place them in data/raw or models/
 ```
