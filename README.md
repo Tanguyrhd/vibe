@@ -81,6 +81,5 @@ make pipeline
 ## Notes
 ```text
 - CSV files and large models are not versioned (.gitignore)
-- Notebooks in archive/ are for reference only
 - To add new data or models, place them in data/raw or models/
 ```
