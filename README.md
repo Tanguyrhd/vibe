@@ -15,15 +15,15 @@ vibe/
 │   ├── 02_feature_engineering
 │   ├── 03_model_training
 │   ├── 04_evaluation
-│   ├── 05_llm_mbti
-│   └── archive             # Old experiments
-├── src/                    # Python modules
-│   ├── api/                # API
-│   ├── data/               # Dataset preparation
-│   ├── features/           # Feature construction
-│   ├── llm/                # LLM (OpenAI, LLaMA)
-│   ├── models/             # Training and save/load
-│   └── pipeline/           # Full project execution
+│   └── 05_llm_mbti
+├── src/
+│   ├── 00_pipeline
+│   ├── 01_prepare
+│   ├── 02_features
+│   ├── 03_models
+│   ├── 04_evaluation
+│   ├── 05_api
+│   └── llm                  
 ├── tests/                  # Unit tests
 ├── Dockerfile
 ├── requirements.txt
@@ -48,34 +48,34 @@ venv\Scripts\activate      # Windows
 
 Install dependencies:
 ```bash
-pip install -r requirements.txt
+make reinstall_package
 ```
 
 ## Utilisation
 
 Prepare the data:
 ```bash
-python -m src.data.make_dataset
+make prepare
 ```
 
 Build the features:
 ```bash
-python -m src.features.build_features
+make features
 ```
 
 Train the models:
 ```bash
-python -m src.models.train_model
+make train
 ```
 
 Evaluate the models:
 ```bash
-python -m src.evaluation.evaluate_model
+make evaluate
 ```
 
 Run the full pipeline:
 ```bash
-python -m src.pipeline.main
+make pipeline
 ```
 
 ## Notes
