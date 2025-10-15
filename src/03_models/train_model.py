@@ -91,9 +91,8 @@ def save_models(models: Dict[str, Any], model_dir: str = "models/", prefix: str 
 # MAIN PIPELINE
 # ==========================
 
-def train_all_models(X, y, test_size: float = 0.2, random_state: int = 42):
+def train_all_models(X_train, X_test, y_train, y_test):
     """Train all classical models and save results."""
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
 
     print("🔹 Training Logistic Regression...")
     logreg_models = train_logistic_regression(X_train, y_train)
@@ -128,7 +127,6 @@ if __name__ == "__main__":
     for i, f in enumerate(files):
         print(f"{i + 1}: {f.name}")
 
-    # Ask user to choose the file
     while True:
         choice = input(f"Choose the file to use (1-{len(files)}): ")
         if choice.isdigit() and 1 <= int(choice) <= len(files):
@@ -137,26 +135,12 @@ if __name__ == "__main__":
         else:
             print("❌ Invalid input, try again.")
 
-    # Automatically load corresponding vectorizer
-    vectorizer_path = processed_file.parent / f"{processed_file.stem}_vectorizer.pkl"
-    if not vectorizer_path.exists():
-        raise FileNotFoundError(f"Vectorizer not found → {vectorizer_path}. "
-                                f"Did you run build_features.py for this file?")
+    # Load pre-built train/test features
+    feature_file = Path("data/processed") / f"{processed_file.stem}_tfidf_data.pkl"
+    if not feature_file.exists():
+        raise FileNotFoundError(f"Pre-built features not found → {feature_file}. Run build_features.py first.")
 
-    df = pd.read_csv(processed_file)
+    with open(feature_file, "rb") as f:
+        X_train, X_test, y_train, y_test = pickle.load(f)
 
-    # Load vectorizer
-    with open(vectorizer_path, "rb") as f:
-        vectorizer = pickle.load(f)
-    X_tfidf = vectorizer.transform(df["clean_text"])
-    X = pd.DataFrame(X_tfidf.toarray(), index=df.index)
-
-    # Check binary columns exist
-    target_cols = ["EI", "SN", "TF", "JP"]
-    missing = [c for c in target_cols if c not in df.columns]
-    if missing:
-        raise KeyError(f"❌ Missing binary columns {missing} in {processed_file}. "
-                       f"Did you run 'make prepare'?")
-    y = df[target_cols]
-
-    train_all_models(X, y)
+    train_all_models(X_train, X_test, y_train, y_test)

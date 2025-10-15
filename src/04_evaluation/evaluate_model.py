@@ -135,27 +135,13 @@ if __name__ == "__main__":
         else:
             print("❌ Invalid input, try again.")
 
-    # Automatically load corresponding vectorizer
-    vectorizer_path = processed_file.parent / f"{processed_file.stem}_vectorizer.pkl"
-    if not vectorizer_path.exists():
-        raise FileNotFoundError(f"Vectorizer not found → {vectorizer_path}. "
-                                f"Did you run build_features.py for this file?")
+     # Load test set from pre-built features
+    feature_file = Path("data/processed") / f"{processed_file.stem}_tfidf_data.pkl"
+    if not feature_file.exists():
+        raise FileNotFoundError(f"Pre-built features not found → {feature_file}. Run build_features.py first.")
 
-    df = pd.read_csv(processed_file)
-
-    # Load vectorizer
-    with open(vectorizer_path, "rb") as f:
-        vectorizer = pickle.load(f)
-    X_tfidf = vectorizer.transform(df["clean_text"])
-    X = pd.DataFrame(X_tfidf.toarray(), index=df.index)
-
-    # Check binary columns exist
-    target_cols = ["EI", "SN", "TF", "JP"]
-    missing = [c for c in target_cols if c not in df.columns]
-    if missing:
-        raise KeyError(f"❌ Missing binary columns {missing} in {processed_file}. "
-                       f"Did you run 'make prepare'?")
-    y = df[target_cols]
+    with open(feature_file, "rb") as f:
+        _, X_test, _, y_test = pickle.load(f)
 
     # Evaluate all available models
-    evaluate_all_models(X, y)
+    evaluate_all_models(X_test, y_test)

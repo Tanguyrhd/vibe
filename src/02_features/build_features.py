@@ -54,7 +54,8 @@ def build_features(df: pd.DataFrame,
                    text_col: str = "clean_text",
                    max_features: int = 5000,
                    test_size: float = 0.2,
-                   vectorizer_path: str = "models/vectorizer.pkl") -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
+                   vectorizer_path: str = "data/processed/vectorizer.pkl",
+                   feature_path: str = "data/processed/tfidf_data.pkl") -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
     Full feature creation pipeline:
     1. Split train/test
@@ -83,6 +84,12 @@ def build_features(df: pd.DataFrame,
         pickle.dump(vectorizer, f)
     print(f"Vectorizer saved → {vectorizer_path}")
 
+    # Save train/test features and labels
+    Path(feature_path).parent.mkdir(parents=True, exist_ok=True)
+    with open(feature_path, "wb") as f:
+        pickle.dump((X_train, X_test, y_train, y_test), f)
+    print(f"Train/test sets saved → {feature_path}")
+
     return X_train, X_test, y_train, y_test
 
 
@@ -110,5 +117,8 @@ if __name__ == "__main__":
             print("❌ Invalid input, try again.")
 
     vectorizer_path = processed_file.parent / f"{processed_file.stem}_vectorizer.pkl"
+    feature_path = Path("data/processed") / f"{processed_file.stem}_tfidf_data.pkl"
+
     df = pd.read_csv(processed_file)
-    X_train, X_test, y_train, y_test = build_features(df, vectorizer_path=str(vectorizer_path))
+
+    X_train, X_test, y_train, y_test = build_features(df, vectorizer_path=str(vectorizer_path), feature_path=str(feature_path))
