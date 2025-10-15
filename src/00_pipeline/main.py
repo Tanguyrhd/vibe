@@ -8,10 +8,10 @@ Exécute toutes les étapes de bout en bout :
 """
 
 import pandas as pd
-from src.data.make_dataset import clean_and_prepare_dataset
-from src.features.build_features import build_features
-from src.models.train_model import train_all_models
-from src.evaluation.evaluate_model import evaluate_pipeline
+from src.01_prepare.make_dataset import clean_and_prepare_dataset
+from src.02_features.build_features import build_features
+from src.03_models.train_model import train_all_models
+from src.04_evaluation.evaluate_model import evaluate_pipeline
 
 # ==========================
 # 🔹 CONFIG
