@@ -35,19 +35,19 @@ PYTHON := python
 
 # Prepare the data
 prepare:
-	$(PYTHON) -m src.01_prepare.make_dataset
+	$(PYTHON) -m src.prepare.make_dataset
 
 # Build the features
 features:
-	$(PYTHON) -m src.02_features.build_features
+	$(PYTHON) -m src.features.build_features
 
 # Train models
 train:
-	$(PYTHON) -m src.03_models.train_model
+	$(PYTHON) -m src.models.train_model
 
 # Evaluate models
 evaluate:
-	$(PYTHON) -m src.04_evaluation.evaluate_model
+	$(PYTHON) -m src.evaluation.evaluate_model
 
 # Run the entire project pipeline
 pipeline:
@@ -57,9 +57,6 @@ pipeline:
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +
 	find . -type f -name "*.pyc" -delete
-
-# Run everything in sequence
-all: prepare features train evaluate pipeline
 
 # ==========================
 #  Package Actions
