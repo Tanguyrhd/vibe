@@ -17,12 +17,12 @@ vibe/
 │   ├── 04_evaluation
 │   └── 05_llm_mbti
 ├── src/
-│   ├── 00_pipeline
-│   ├── 01_prepare
-│   ├── 02_features
-│   ├── 03_models
-│   ├── 04_evaluation
-│   ├── 05_api
+│   ├── pipeline
+│   ├── prepare
+│   ├── features
+│   ├── models
+│   ├── evaluation
+│   ├── api
 │   └── llm                  
 ├── tests/                  # Unit tests
 ├── Dockerfile
