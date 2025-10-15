@@ -6,7 +6,7 @@
 PYTHON := python
 
 # ==========================
-# 📖 Utilisation
+#  Utilisation
 # ==========================
 # Prepare the data:
 #   make prepare
@@ -30,24 +30,24 @@ PYTHON := python
 #   make clean
 
 # ==========================
-# 📦 Python / Project Actions
+#  Python / Project Actions
 # ==========================
 
 # Prepare the data
 prepare:
-	$(PYTHON) -m src.data.make_dataset
+	$(PYTHON) -m src.01_prepare.make_dataset
 
 # Build the features
 features:
-	$(PYTHON) -m src.features.build_features
+	$(PYTHON) -m src.02_features.build_features
 
 # Train models
 train:
-	$(PYTHON) -m src.models.train_model
+	$(PYTHON) -m src.03_models.train_model
 
 # Evaluate models
 evaluate:
-	$(PYTHON) -m src.evaluation.evaluate_model
+	$(PYTHON) -m src.04_evaluation.evaluate_model
 
 # Run the entire project pipeline
 pipeline:
@@ -62,14 +62,23 @@ clean:
 all: prepare features train evaluate pipeline
 
 # ==========================
-# 🔧 Package Actions
+#  Package Actions
 # ==========================
 reinstall_package:
 	@pip uninstall -y vibe || :
 	@pip install -e .
 
 # ==========================
-# 🐳 Docker Local
+#  Fast API
+# ==========================
+# Test API locally
+fast_api:
+	uvicorn vibe_api:app --reload
+
+# Find it in the browser at : http://localhost:8000/docs or http://localhost:8000/predict
+
+# ==========================
+#  Docker Local
 # ==========================
 build_container_local:
 	docker build --tag=$$IMAGE:dev .
@@ -78,7 +87,7 @@ run_container_local:
 	docker run -it -e PORT=8000 -p 8080:8000 $$IMAGE:dev
 
 # ==========================
-# ☁️ Docker Deployed / Cloud Run
+#  Docker Deployed / Cloud Run
 # ==========================
 
 # Step 1 (ONLY FIRST TIME)
